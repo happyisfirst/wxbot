@@ -1,0 +1,2 @@
+# wxbot
+a wechat bot 
