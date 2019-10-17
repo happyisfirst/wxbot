@@ -24,6 +24,8 @@ def text_reply(msg):
         msg.user.send(u'@%s\u2005I received: %s' % (
             msg.actualNickName, msg.text))
 
+
+
     print(msg.isAt)
     print(msg.actualNickName)
     print(msg.text)
