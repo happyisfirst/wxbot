@@ -34,14 +34,14 @@ def rebate():
 
 
 def after_login():
-    # sched.add_job(send_msg, 'cron', year=2018, month=7, day=28, hour=16, minute=5, second=30)
+    # scheduler.add_job(send_msg, 'cron', year=2018, month=7, day=28, hour=16, minute=5, second=30)
     scheduler.start()
 
 def after_logout():
     scheduler.shutdown()
 
 
-# 好友信息监听
+# 好友信息监听--这个不是很需要
 @itchat.msg_register([TEXT, PICTURE, RECORDING, ATTACHMENT, VIDEO], isFriendChat=True)
 def handle_friend_msg(msg):
     msg_id = msg['MsgId']
