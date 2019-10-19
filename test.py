@@ -27,7 +27,7 @@ def getchatroom_friendlist(chatroomName):
 
 
 #@scheduler.scheduled_job("cron", day_of_week='*', hour='*', minute='*', second='30')
-def send_msg():
+def send_msg(msgcontent):
         print('schedule execute')
         itchat.get_chatrooms(update=True)
 
@@ -37,14 +37,21 @@ def send_msg():
 
         chatrooms = itchat.search_chatrooms(name='测试')
        # chatroom = itchat.update_chatroom(chatrooms[0]['UserName'])
-        itchat.send('定时发消息！', chatrooms[0]['UserName'])
+        itchat.send(msgcontent, chatrooms[0]['UserName'])
 
 def after_login():
-    scheduler.add_job(send_msg, 'cron',  day='*', hour='*', minute='16', second=30)
+
+    msgcontent='传参测试/heiha'
+    scheduler.add_job(send_msg, 'cron',  day='*', hour='*', minute='*/3', second=30 ,args=(msgcontent,))#只能传函数本身，so？
+    # scheduler.add_job(send_msg, 'cron', day='*', hour='*', minute='*', second=35, args=('测试1',))  # 只能传函数本身，so？
+    # scheduler.add_job(send_msg, 'cron', day='*', hour='*', minute='*', second=40, args=('测试2',))  # 只能传函数本身，so？
+    # scheduler.add_job(send_msg, 'cron', day='*', hour='*', minute='*', second=45, args=('测试3',))  # 只能传函数本身，so？
+    # scheduler.add_job(send_msg, 'cron', day='*', hour='*', minute='*', second=55, args=('测试4',))  # 只能传函数本身，so？
     scheduler.start()
 
 def after_logout():
     scheduler.shutdown()
+    f.close()
 
 
 # 好友信息监听--这个不是很需要
@@ -66,10 +73,15 @@ def information(msg):
     msg_content = msg['Content']
     msg_create_time = msg['CreateTime']
     msg_type = msg['Type']
+    writertofile = msg_from_user+msg_content+msg_type+'\n'
+    f.write(writertofile)
+    print(writertofile)
     print("群聊信息: ",msg_id, msg_from_user, msg_content, msg_create_time,msg_type)
 
 
 if __name__ == '__main__':
+    f = open("data.txt", 'a')#a 是附加模式
+    f.write('sdfsdfs\n')
     scheduler = BackgroundScheduler()
     itchat.auto_login(hotReload=True , loginCallback=after_login , exitCallback=after_logout)
     getchatroom_friendlist('测试')
