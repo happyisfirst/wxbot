@@ -14,27 +14,33 @@ def getchatroom_friendlist(chatroomName):
     if chatrooms:#这里是有bug的··· 改成 if chatrooms 就好了，再改了一下逻辑。
         chatroom = itchat.update_chatroom(chatrooms[0]['UserName'])
         for friend in chatroom['MemberList']:
-            print('本群昵称：' + friend['DisplayName'] + '  #' , '昵称:' + friend['NickName'])
+            print('本群昵称：' + friend['DisplayName'] + '  #' '昵称:' + friend['NickName'])
             print(friend['DisplayName'] or friend['NickName'])
     else:
         print(u'没有找到群聊：' + chatroomName)
 
-scheduler = BackgroundScheduler()
+# def send_msg():
+#     user_info = itchat.search_friends(name='培杰')
+#     if len(user_info) > 0:
+#         user_name = user_info[0]['UserName']
+#         itchat.send_msg('生日快乐哦！', toUserName=user_name)
 
+
+#@scheduler.scheduled_job("cron", day_of_week='*', hour='*', minute='*', second='30')
 def send_msg():
-    user_info = itchat.search_friends(name='培杰')
-    if len(user_info) > 0:
-        user_name = user_info[0]['UserName']
-        itchat.send_msg('生日快乐哦！', toUserName=user_name)
-
-
-@scheduler.scheduled_job("cron", day_of_week='*', hour='*', minute='*', second='30')
-def rebate():
         print('schedule execute')
+        itchat.get_chatrooms(update=True)
 
+        # chatrooms = itchat.search_chatrooms(name='测试')
+        # chatroom = itchat.update_chatroom(chatrooms[0]['UserName'])
+        # itchat.send('生日快乐哦！', chatroom['UserName'])
+
+        chatrooms = itchat.search_chatrooms(name='测试')
+       # chatroom = itchat.update_chatroom(chatrooms[0]['UserName'])
+        itchat.send('定时发消息！', chatrooms[0]['UserName'])
 
 def after_login():
-    # scheduler.add_job(send_msg, 'cron', year=2018, month=7, day=28, hour=16, minute=5, second=30)
+    scheduler.add_job(send_msg, 'cron',  day='*', hour='*', minute='16', second=30)
     scheduler.start()
 
 def after_logout():
@@ -64,8 +70,7 @@ def information(msg):
 
 
 if __name__ == '__main__':
-    itchat.auto_login(hotReload=True,loginCallback=after_login, exitCallback=after_logout)
-    print('here')
+    scheduler = BackgroundScheduler()
+    itchat.auto_login(hotReload=True , loginCallback=after_login , exitCallback=after_logout)
     getchatroom_friendlist('测试')
-    print('hereagain')
     itchat.run()
