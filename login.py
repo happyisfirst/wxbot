@@ -19,6 +19,7 @@ from itchat.content import *
 #     msg.user.verify()
 #     msg.user.send('Nice to meet you!')
 
+
 @itchat.msg_register(TEXT, isGroupChat=True)
 def text_reply(msg):
     if msg.isAt:

@@ -2,6 +2,7 @@
 import itchat, time
 from apscheduler.schedulers.background import BackgroundScheduler
 from itchat.content import *
+import dataprocess
 
 
 #获取群聊名称，打印群聊中成员，也可修改为返回成员列表
@@ -80,9 +81,11 @@ def information(msg):
 
 
 if __name__ == '__main__':
+    # rec = record.Record()
+    # rec.count=0
     f = open("data.txt", 'a')#a 是附加模式
     f.write('sdfsdfs\n')
     scheduler = BackgroundScheduler()
-    itchat.auto_login(hotReload=True , loginCallback=after_login , exitCallback=after_logout)
+    itchat.auto_login(hotReload=True, loginCallback=after_login, exitCallback=after_logout)
     getchatroom_friendlist('测试')
     itchat.run()
