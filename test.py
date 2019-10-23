@@ -80,6 +80,21 @@ def information(msg):
     print("群聊信息: ",msg_id, msg_from_user, msg_content, msg_create_time,msg_type)
 
 
+def update_group_info(group_uuid, is_log=False):
+    """ 用户加群后更新群信息，主要是为了更新群会员信息 """
+    group = itchat.update_chatroom(group_uuid, detailedMember=True)
+    group_info = group_infos_dict[group_uuid]
+    group_info['group_uuid'] = group['UserName']
+    group_info['count'] = len(group['MemberList'])
+    member_uid_list = uidlist_compile.findall(str(group))  # 根据正则取出群组里所有用户的 uid。
+    if member_uid_list:
+        group_info['member_uid_list'] = member_uid_list
+    group_infos_dict[group_uuid] = group_info
+    if is_log:
+        set_note('已更新群聊『{}』成员的信息，当前人数：{} 人。'.format(group['NickName'], len(member_uid_list)))
+    return group_info
+
+
 if __name__ == '__main__':
     # rec = record.Record()
     # rec.count=0
