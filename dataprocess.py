@@ -1,40 +1,47 @@
 import time
 import os
 
+# 后期可以改善创建一个文件夹去存
+def storetofile(msglist):
+    #f ilename = os.getcwd() + '/data/groupmsg.txt'  # 用groupname为文件名存储到data 目录下
+    filename='groupmsg.txt'
+    basedir = os.path.dirname(__file__)
 
-def storetofile(groupname, msglist):
-    # filename = os.getcwd() +'/data/'+ time.strftime("%Y-%m-%d", time.localtime()) + '.txt'  #存储到data 目录下
-    filename = os.getcwd() + '/data/' + groupname + '.txt'  # 用groupname为文件名存储到data 目录下
-    f = open(filename, 'a')
+    # 如果没有创建目录
+    isExists = os.path.exists(basedir + '/data')
+    # 判断结果
+    if not isExists:
+        # 如果不存在则创建目录
+        # 创建目录操作函数
+        os.makedirs(basedir + '/data')
+
+    file_path = os.path.join(basedir, './data', filename)
+    f = open(file_path, 'a')
     for msg in msglist:
-        f.write(msg)
+        f.write(msg+'\n')
     f.close()
+    print('存储成功，时间：'+time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
 
 
-# 读取文件并对
-def proecssdata(groupname):
-    filename = os.getcwd() + '/data/' + groupname + '.txt'
+# 读取文件并对数据进行解析
+def proecssdata():
+    filename = os.getcwd() + '/data/groupmsg.txt'
     f = open(filename, 'r')
     content = f.readlines()  # 读取文件中的全部行，按行划分存储到列表中，类型字符串
+    variable=processline(content)
+
+
+# 读取配置文件，进行程序初始化
+def readconfigfile():
+    filename = os.getcwd() + '/data/groupmsg.txt'
+    f = open(filename, 'r')
+    content = f.readlines()  # 读取文件中的全部行，按行划分存储到列表中，类型字符串
+    variable=processline(content)
 
 
 # 对一行聊天记录进行分解，读取必要信息
 def processline(msgcontent):
-    pass
+    variable = []
+    return variable
 
-
-class Record:
-    count = 0  # 每100个记录就进行一次存储
-
-    def __init__(self):
-        self.msgDic = {}
-
-    # def storeToFileExit(self):
-    #     filename = time.strftime("%Y-%m-%d", time.localtime()) + '.txt'
-    #     f = open(filename, 'a')
-    #     for msg in self.msgList:
-    #         f.write(msg)
-    #     f.close()
-    #     self.msgList = []
-    #     self.count = 0
 
