@@ -36,7 +36,8 @@ class user:
     
     def makePersonFile(self):
         if(not os.path.exists(self._path)):
-            os.mknod(self._path)
+            file = open(self._path,'w')
+            file.close()
 
     def storeContents(self):
         if(self._username[0] != '一'):

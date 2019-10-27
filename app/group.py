@@ -41,7 +41,8 @@ class group:
     def makeGroupDir(self):
         if(not os.path.exists(self._path)):
             os.mkdir(self._path)
-            os.mknod(self._path + '/total.txt')
+            file = open(self._path + '/total.txt','w')
+            file.close()
 
     def classGroupMessagesToPerson(self):
         ''' 将群聊信息按个人分类，归入每个用户对象中，方便后续统计 '''
@@ -70,7 +71,7 @@ class group:
         # 总信息文件路径
         totalFilaPath = self._path + '/total.txt'
         if(not os.path.exists(totalFilaPath)):
-            os.mknod(totalFilaPath)
+            file = open(totalFilaPath,'w')
 
         totalInfo = {}
         addedUser = []
