@@ -1,5 +1,5 @@
-from group import group
-import gvariable as gl
+from app import gvariable as gl
+from app.group import group
 
 def classMessageByGroup():
 

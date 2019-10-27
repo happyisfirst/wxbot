@@ -3,21 +3,21 @@
 import itchat
 import time
 from itchat.content import *
-import dataprocess
+from app import dataprocess
+from app import gvariable as gl
 from apscheduler.schedulers.background import BackgroundScheduler
-
-#群聊名称
+from app.fileprocess import classMessageByGroup
+# 群聊名称
 groupnamelist=[]
-#为了每次唯一确定一个group
+# 为了每次唯一确定一个group
 groupnametransfer = {}
 #群聊指定关键词
 groupkeys = {}
-
 #每10分钟进行一次存储
 msgfromGroup =[]
 
 
-#获取群成员聊天记录。
+# 获取群成员聊天记录。
 @itchat.msg_register(TEXT, isGroupChat=True)
 def text_record(msg):
     global msgfromGroup
@@ -39,13 +39,14 @@ def text_record(msg):
 
 # 通过群名称获取群成员列表，放入统计字典里。  要考虑两个群会有相同的成员，所以要区别对待··· 这里写入文件里
 def getchatroom_friendlist(chatroomNamelist):
-    global msgstatistics
-    file = open('groupmember.txt', 'w')
+
+    filename = gl.CHAT_DATA_PATH + gl.FRIENDLIST_TFILE
+    file = open(filename, 'w')
     itchat.get_chatrooms(update=True)
     for chatroomName in chatroomNamelist:
         chatrooms = itchat.search_chatrooms(name=chatroomName)
         # print(chatrooms)
-        if chatrooms:#这里是有bug的··· 改成 if chatrooms 就好了，再改了一下逻辑。
+        if chatrooms:  # 这里是有bug的··· 改成 if chatrooms 就好了，再改了一下逻辑。
             chatroom = itchat.update_chatroom(chatrooms[0]['UserName'])
             # print(chatroom['UserName'])
             # print(chatroom)
@@ -64,7 +65,7 @@ def send_msg(msgcontent, groupname):
     itchat.update_chatroom(uname[0])
     itchat.send(msgcontent, uname[0])
 
-#转换群名到username，每次登陆username都不同
+# 转换群名到username，每次登陆username都不同
 def getgname(namelist):
     global groupnametransfer
     for gname in namelist:
@@ -82,12 +83,12 @@ def getgname(namelist):
 # 定时存储聊天记录
 def store():
     global msgfromGroup
-
     dataprocess.storetofile(msgfromGroup)
     #对聊天记录进行排序，存入到暂时的文件，每隔一段时间进行一次统计
     msgfromGroup.sort()
     dataprocess.storetotempfile(msgfromGroup)
     msgfromGroup.clear()
+    classMessageByGroup()
 
 #读取配置文件对程序进行初始化
 def readconfigure():
@@ -106,28 +107,20 @@ def readconfigure():
             else:
                 groupnamelist.append(getname[0])
                 groupkeys.setdefault(getname[0], getname[1].split('#'))
-
         if typetag[0] == '2':
              getname= typetag[1].split('#')
              scheduler.add_job(send_msg, 'cron', day='*', hour=getname[1], minute=getname[2], second=getname[3],
                                args=(getname[4], getname[0]))
 
+# 登陆后运行
 def after_login():
-    #msgcontent='传参测试/heiha'
-    # print('登录成功')
-    # namelist= ['测试1111', '拳头游戏2020']
     readconfigure()
-    getgname(groupnamelist)
-
-    # print(groupnametransfer)
-    # print(groupnamelist)
-    # print(groupkeys)
-    #print(groupnametransfer)
-    # scheduler.add_job(dataprocess.storetofile, 'cron',  day='*', hour='*', minute='*/3', second=30,
-    #                   args=(msgfromGroup,))#只能传函数本身，so？
+    dataprocess.createdatadir()  # 创建文件存储目录
+    getgname(groupnamelist)  # 获取群聊中人员信息
     scheduler.add_job(store, 'cron', day='*', hour='*', minute='*/3', second=0)  # 只能传函数本身，so？
     scheduler.start()
 
+# 注销后运行，手机端推出网页微信或断网··!!!!终止程序不会触发
 def after_logout():
     scheduler.shutdown()
     dataprocess.storetofile(msgfromGroup)
@@ -138,5 +131,4 @@ if __name__ == '__main__':
     scheduler = BackgroundScheduler()
     itchat.auto_login(hotReload=True, loginCallback=after_login, exitCallback=after_logout)
     getchatroom_friendlist(groupnamelist)
-    #print(msgstatistics)
     itchat.run()

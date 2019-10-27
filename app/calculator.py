@@ -1,7 +1,7 @@
 import os
 import time
-import datetime
-import gvariable as gl
+from app import gvariable as gl
+
 
 def calculateUserSpeakingTimes(groupname, username, start, end):
 

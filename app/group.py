@@ -1,6 +1,6 @@
 import os
-import gvariable as gl
-from user import user
+from app import gvariable as gl
+from app.user import user
 
 class group:
 
@@ -9,7 +9,7 @@ class group:
     _messages = []
     _path = ''
 
-    def __init__(self,groupname):
+    def __init__(self, groupname):
         self._members = []
         self._messages = []
         self._groupname = groupname

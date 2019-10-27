@@ -1,3 +1,7 @@
 venv/*
 .idea/*
 .DS_Store
+testfile/*
+itchat.pkl
+QR.png
+

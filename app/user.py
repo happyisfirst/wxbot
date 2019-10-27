@@ -1,6 +1,4 @@
-import os
-import gvariable as gl
-from calculator import *
+from app.calculator import *
 
 class user:
 
