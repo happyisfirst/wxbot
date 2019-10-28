@@ -4,4 +4,4 @@ venv/*
 testfile/*
 itchat.pkl
 QR.png
-
+data/*
