@@ -1,7 +1,7 @@
 import time
 import os
 from app import gvariable as gl
-
+from app.fileprocess import classMessageByGroup
 # 将所有聊天记录存放到这里
 def storetofile(msglist):
     # 如果聊天列表为空，直接退出函数
@@ -17,9 +17,9 @@ def storetofile(msglist):
 
 # 暂存聊天记录以供数据分析使用
 def storetotempfile(msglist):
-    # 如果聊天列表为空，直接退出函数
-    if not msglist:
-        return
+    # 如果聊天列表为空，直接退出函数,会导致重复统计
+    # if not msglist:
+    #     return
     filename = gl.CHAT_DATA_PATH + gl.CHATFILE_TEMP_FILENAME
     f = open(filename, 'w')
     for msg in msglist:
@@ -39,4 +39,7 @@ def createdatadir():
 # 通过值返回键值
 def get_key(dict, value):
     return [k for k, v in dict.items() if v == value]
+
+def statictempfile():
+    classMessageByGroup()
 

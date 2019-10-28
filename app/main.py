@@ -1,4 +1,3 @@
-#!/usr/local/bin/python3
 # -*- coding: utf-8 -*-
 import itchat
 import time
@@ -6,7 +5,6 @@ from itchat.content import *
 from app import dataprocess
 from app import gvariable as gl
 from apscheduler.schedulers.background import BackgroundScheduler
-from app.fileprocess import classMessageByGroup
 # 群聊名称
 groupnamelist=[]
 # 为了每次唯一确定一个group
@@ -88,7 +86,15 @@ def store():
     msgfromGroup.sort()
     dataprocess.storetotempfile(msgfromGroup)
     msgfromGroup.clear()
-    classMessageByGroup()
+    dataprocess.statictempfile()
+
+def sendtomyself():
+    itchat.send('Hello, filehelper', toUserName='filehelper')
+
+def sendtomaps():
+    mps = itchat.get_mps()
+    userName = mps[0]['UserName']
+    itchat.send("hello", toUserName=userName)
 
 #读取配置文件对程序进行初始化
 def readconfigure():
@@ -115,9 +121,13 @@ def readconfigure():
 # 登陆后运行
 def after_login():
     readconfigure()
+    gl.GROUP_NAMELIST = groupnamelist
+    gl.GROUP_KEYS = groupkeys
     dataprocess.createdatadir()  # 创建文件存储目录
     getgname(groupnamelist)  # 获取群聊中人员信息
-    scheduler.add_job(store, 'cron', day='*', hour='*', minute='*/3', second=0)  # 只能传函数本身，so？
+    scheduler.add_job(store, 'cron', day='*', hour='*', minute='*/1', second=0)  # 只能传函数本身，so？
+    scheduler.add_job(sendtomyself, 'cron', day='*', hour='*', minute='*/10', second=0)
+    scheduler.add_job(sendtomaps, 'cron', day='*', hour='*', minute='*/10', second=0)
     scheduler.start()
 
 # 注销后运行，手机端推出网页微信或断网··!!!!终止程序不会触发

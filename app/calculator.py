@@ -49,7 +49,8 @@ def strToTime(str):
     return time.mktime(time.strptime(str, '%Y-%m-%d %H:%M:%S'))
 
 
-def calculateKeywordTimes(groupname, keyword, start, end):
+# keyword 是一个列表
+def calculateKeywordTimes(groupname, keywords, start, end):
     '''
     在指定群聊内统计所有用户关键词出现次数
     @para groupname ： 要找的目标群聊
@@ -58,8 +59,10 @@ def calculateKeywordTimes(groupname, keyword, start, end):
     @para end ： 查找聊天的结束时间点
     @return len ： 消息条数
     '''
+    print(keywords)
     filepath = gl.CHAT_DATA_PATH + groupname
     files = os.listdir(filepath)
+    print(files)
     result = {}
     for file in files:
         if(gl.TOTAL_INFO_FILE in file):
@@ -67,7 +70,11 @@ def calculateKeywordTimes(groupname, keyword, start, end):
         contents = calculateUserSpeakingTimes(groupname, file, start, end)
         keywordTimes = 0
         for content in contents:
-            if(keyword in content):
-                keywordTimes = keywordTimes + 1
+            for keyword in keywords:
+                if keyword in content:
+                    keywordTimes = keywordTimes + 1
+                    break
         result[file] = keywordTimes
+    # print('calwenjian')
+    # print(result)
     return result
