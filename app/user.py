@@ -3,10 +3,10 @@ import datetime
 
 class user:
 
-    _username = ''
+    _username = u''
     _contents = []
-    _path = ''
-    _group = ''
+    _path = u''
+    _group = u''
     _groupkeys= []
 
     

@@ -4,10 +4,10 @@ from app.user import user
 
 class group:
 
-    _groupname = ''
+    _groupname = u''
     _members = []
     _messages = []
-    _path = ''
+    _path = u''
     _keywords = []
 
     def __init__(self, groupname, keywords):
@@ -77,7 +77,7 @@ class group:
         
     def writeTotalInfo(self):
         # 总信息文件路径
-        totalFilaPath = self._path + '/total.txt'
+        totalFilaPath = self._path + gl.PATH_SEPARATOR +'total.txt'
         if(not os.path.exists(totalFilaPath)):
             file = open(totalFilaPath, 'w')
             file.close()

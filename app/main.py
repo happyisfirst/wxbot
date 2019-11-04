@@ -22,15 +22,15 @@ def text_record(msg):
     # 格式为#群聊名#用户昵称#信息内容#时间   这里要注意群聊中的用户昵称会改变，同时要判断自己的昵称···\
     try:
         gname = groupnametransfer[msg['FromUserName']]
-        if gname == '我':
+        if gname == u'我':
             gname = groupnametransfer[msg['ToUserName']]
     except KeyError:
-            gname = '无关群聊'
-    if gname == '无关群聊':
+            gname = u'无关群聊'
+    if gname == u'无关群聊':
         return
     msg.text=msg.text.replace('\n', '')
     formatmsg = gname+'\t'+msg.actualNickName+'\t'+msg.text+'\t' + \
-                time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+                time.strftime(u"%Y-%m-%d %H:%M:%S", time.localtime())
 
     msgfromGroup.append(formatmsg)
     print(msgfromGroup[-1])
@@ -48,7 +48,7 @@ def getchatroom_friendlist(chatroomNamelist):
             chatroom = itchat.update_chatroom(chatrooms[0]['UserName'])
             # print(chatroom['UserName'])
             # print(chatroom)
-            file.write('-----------' + chatroomName + '------------' + '\n')
+            file.write(u'-----------' + chatroomName + u'------------' + '\n')
             for friend in chatroom['MemberList']:
                 file.write(friend['NickName'] + '\n')
         else:

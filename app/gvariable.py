@@ -6,11 +6,11 @@ import os
 # 文件夹信息文件的文件名
 TOTAL_INFO_FILE = 'total.txt'
 # 信息文件的头
-TOTAL_INFO_TITLE = '目前为止用户总发言次数:'
-TOTAL_KEYINFO_TITLE = '目前为止用户关键词发言次数:'
+TOTAL_INFO_TITLE = u'目前为止用户总发言次数:'
+TOTAL_KEYINFO_TITLE = u'目前为止用户关键词发言次数:'
 
 # 路径分隔符
-PATH_SEPARATOR = '/'
+PATH_SEPARATOR = u'\\'
 
 # 聊天文件存储路径
 #CHAT_DATA_PATH=os.getcwd() + '/data/'
