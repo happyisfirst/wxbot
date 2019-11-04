@@ -34,7 +34,7 @@ def createdatadir():
         # 如果不存在则创建目录
         # 创建目录操作函数
         os.makedirs(gl.CHAT_DATA_PATH)
-        print('create data dir successfully')
+        print('create data dir successfully.')
 
 # 通过值返回键值
 def get_key(dict, value):
@@ -42,4 +42,5 @@ def get_key(dict, value):
 
 def statictempfile():
     classMessageByGroup()
+
 
