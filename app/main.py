@@ -1,10 +1,16 @@
 # -*- coding: utf-8 -*-
+import sys
+import os
+curPath = os.path.abspath(os.path.dirname(__file__))
+rootPath = os.path.split(curPath)[0]
+sys.path.append(rootPath)
 import itchat
 import time
 from itchat.content import *
 from app import dataprocess
 from app import gvariable as gl
 from apscheduler.schedulers.background import BackgroundScheduler
+
 # 群聊名称
 groupnamelist=[]
 # 为了每次唯一确定一个group
@@ -39,7 +45,7 @@ def text_record(msg):
 def getchatroom_friendlist(chatroomNamelist):
 
     filename = gl.CHAT_DATA_PATH + gl.FRIENDLIST_TFILE
-    file = open(filename, 'w')
+    file = open(filename, 'w',encoding='UTF-8')
     itchat.get_chatrooms(update=True)
     for chatroomName in chatroomNamelist:
         chatrooms = itchat.search_chatrooms(name=chatroomName)
@@ -98,7 +104,8 @@ def sendtomaps():
 
 #读取配置文件对程序进行初始化
 def readconfigure():
-    file = open('configure.txt', 'r')
+    fname=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))+ gl.PATH_SEPARATOR+'configure.txt'
+    file = open(fname, 'r',encoding ='UTF-8')
     global groupnamelist
     global groupkeys
     # 根据类型
@@ -125,7 +132,7 @@ def after_login():
     gl.GROUP_KEYS = groupkeys
     dataprocess.createdatadir()  # 创建文件存储目录
     getgname(groupnamelist)  # 获取群聊中人员信息
-    scheduler.add_job(store, 'cron', day='*', hour='*', minute='*/1', second=0)  # 只能传函数本身，so？
+    scheduler.add_job(store, 'cron', day='*', hour='*', minute='*/2', second=0)  # 只能传函数本身，so？
     scheduler.add_job(sendtomyself, 'cron', day='*', hour='*', minute='*/10', second=0)
     scheduler.add_job(sendtomaps, 'cron', day='*', hour='*', minute='*/10', second=0)
     scheduler.start()
@@ -138,6 +145,7 @@ def after_logout():
 
 
 if __name__ == '__main__':
+ 
     scheduler = BackgroundScheduler()
     itchat.auto_login(hotReload=True, loginCallback=after_login, exitCallback=after_logout)
     getchatroom_friendlist(groupnamelist)

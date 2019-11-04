@@ -10,7 +10,7 @@ TOTAL_INFO_TITLE = u'目前为止用户总发言次数:'
 TOTAL_KEYINFO_TITLE = u'目前为止用户关键词发言次数:'
 
 # 路径分隔符
-PATH_SEPARATOR = u'\\'
+PATH_SEPARATOR = u'/'
 
 # 聊天文件存储路径
 #CHAT_DATA_PATH=os.getcwd() + '/data/'
